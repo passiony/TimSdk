@@ -1,9 +1,12 @@
 using System;
+using UnityEngine;
 using System.Runtime.InteropServices;
 
 public class IOSTimSDKImpl : ITimImpl
 {
 
+    [DllImport("__Internal")]
+    private static extern void __ctor(string u3dGameObject,string callback);
     [DllImport("__Internal")]
     private static extern void __Init(int appId);
     [DllImport("__Internal")]
@@ -16,7 +19,7 @@ public class IOSTimSDKImpl : ITimImpl
     [DllImport("__Internal")]
     private static extern void __ModifySelfProfile(string nickname, int gender, int birthday, string signature, string allowType);
     [DllImport("__Internal")]
-    private static extern void __GetUsersProfile(string identifier, bool forceUpdate);
+    private static extern void __GetUserProfile(string identifier, bool forceUpdate);
 
     [DllImport("__Internal")]
     private static extern void __GetFriendList();
@@ -45,6 +48,10 @@ public class IOSTimSDKImpl : ITimImpl
     [DllImport("__Internal")]
     private static extern void __GetGroupList();
     
+    public IOSTimSDKImpl(GameObject go, string callback)
+    {
+        __ctor(go.name, callback);
+    }
 
     #region Init
     public void Init(int appID)
@@ -75,9 +82,9 @@ public class IOSTimSDKImpl : ITimImpl
         __ModifySelfProfile(nickname, gender, birthday, signature, allowType);
     }
 
-    public void GetUsersProfile(string identifier, bool forceUpdate)
+    public void GetUserProfile(string identifier, bool forceUpdate)
     {
-        __GetUsersProfile(identifier, forceUpdate);
+        __GetUserProfile(identifier, forceUpdate);
     }
 
 #endregion

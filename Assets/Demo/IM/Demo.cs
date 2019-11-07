@@ -52,7 +52,7 @@ public class Demo : MonoBehaviour {
         });
         buttons[6].onClick.AddListener(() =>
         {
-            timsdk.GetUsersProfile(inputs[6].text,true);
+            timsdk.GetUserProfile(inputs[6].text,true);
         });
         buttons[7].onClick.AddListener(() =>
         {

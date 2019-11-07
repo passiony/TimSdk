@@ -88,7 +88,7 @@ public class TimSDK : MonoBehaviour
     /// <param name="allowType">"AllowType_Type_Invalid";"AllowType_Type_AllowAny";"AllowType_Type_DenyAny";"AllowType_Type_NeedConfirm";</param>
     public void ModifySelfProfile(string nickname, int gender, int birthday, string signature, string allowType)
     {
-        Debug.Log("TimSDK.GetSelfProfile()");
+        Debug.Log("TimSDK.ModifySelfProfile()");
         TimSdkImpl.ModifySelfProfile(nickname, gender, birthday, signature, allowType);
     }
 
@@ -100,11 +100,11 @@ public class TimSDK : MonoBehaviour
     /// 当 forceUpdate = true 时，会强制从后台拉取数据，并把返回的数据缓存下来。
     /// 当 forceUpdate = false 时，则先在本地查找，如果本地没有数据则再向后台请求数据。
     /// 建议只在显示资料时强制拉取，以减少等待时间。
-    public void GetUsersProfile(string identifier, bool forceUpdate)
+    public void GetUserProfile(string identifier, bool forceUpdate)
     {
-        Debug.Log("TimSDK.GetUsersProfile()");
+        Debug.Log("TimSDK.GetUserProfile()");
 
-        TimSdkImpl.GetUsersProfile(identifier, forceUpdate);
+        TimSdkImpl.GetUserProfile(identifier, forceUpdate);
     }
 
     /// <summary>

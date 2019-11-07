@@ -5,43 +5,19 @@
 //  Copyright © 2019年 jiuwei. All rights reserved.
 //
 
+#import "TIMSDK_Unity3DBridge.h"
 #import <ImSDK/ImSDK.h>
+#import "TIMJsonUtil.h"
 #import "GenerateTestUserSig.h"
-#import "TIMJsonUtil.m"
 
-@interface IMSDK_Unity3DBridge : NSObject<TIMConnListener,TIMUserStatusListener,TIMMessageListener,TIMGroupEventListener,TIMRefreshListener>
+@implementation TIMSDK_Unity3DBridge: NSObject
 
-+ (IMSDK_Unity3DBridge *)shareInstance;
-
-// @implementation TIMConnListenerImpl
-- (void)onConnSucc;
-- (void)onConnFailed:(int)code err:(NSString*)err;
-- (void)onDisconnect:(int)code err:(NSString*)err;
-
-// @implementation TIMUserStatusListenerImpl
-- (void)onForceOffline;
-- (void)onUserSigExpired;
-
-// @implementation TIMGroupEventListener
-- (void)onGroupTipsEvent:(TIMGroupTipsElem*)elem;
-
-// @implementation TIMRefreshListener
-- (void)onRefresh;
-- (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations;
-
-// @implementation TIMMessageListenerImpl
-- (void)onNewMessage:(NSArray*) msgs;
-
-@end
-
-@implementation IMSDK_Unity3DBridge: NSObject
-
-+ (IMSDK_Unity3DBridge *)shareInstance{
-    static IMSDK_Unity3DBridge * _singleton = nil ;
++ (TIMSDK_Unity3DBridge *)shareInstance{
+    static TIMSDK_Unity3DBridge * _singleton = nil ;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if (_singleton == nil) {
-            _singleton = [[IMSDK_Unity3DBridge alloc] init];
+            _singleton = [[TIMSDK_Unity3DBridge alloc] init];
         }
     });
     return _singleton;
@@ -49,53 +25,42 @@
 
 // @implementation TIMConnListenerImpl
 - (void)onConnSucc {
-    [TIMJsonUtil NotifyToJson:TActionConnected desc:@"onConnSucc"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionConnected desc:@"onConnSucc"]);
 }
 - (void)onConnFailed:(int)code err:(NSString*)err {
 // code 错误码：具体参见错误码表
     NSLog(@"Connect Failed: code=%d, err=%@", code, err);
 }
 - (void)onDisconnect:(int)code err:(NSString*)err {
-    [TIMJsonUtil NotifyToJson:TActionDisconnected desc:@"onDisconnect"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionDisconnected desc:@"onDisconnect"]);
 }
 
 // @implementation TIMUserStatusListenerImpl 
 - (void)onForceOffline {
-    [TIMJsonUtil NotifyToJson:TActionForceOffline desc:@"onForceOffline"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionForceOffline desc:@"onForceOffline"]);
 }
 - (void)onUserSigExpired {
-    [TIMJsonUtil NotifyToJson:TActionUserSigExpired desc:@"onUserSigExpired"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionUserSigExpired desc:@"onUserSigExpired"]);
 }
 - (void)onGroupTipsEvent:(TIMGroupTipsElem*)elem{
-    [TIMJsonUtil NotifyToJson:TActionGroupEvent desc:@"onGroupTipsEvent"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionGroupEvent desc:@"onGroupTipsEvent"]);
 }
 
 // @implementation TIMRefreshListener
 - (void)onRefresh{
-    [TIMJsonUtil NotifyToJson:TActionRefresh desc:@"onRefresh"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionRefresh desc:@"onRefresh"]);
 }
 - (void)onRefreshConversations:(NSArray<TIMConversation *>*)conversations{
-    [TIMJsonUtil NotifyToJson:TActionConversationRefresh desc:@"onRefreshConversations"];
+    SendToUnity([TIMJsonUtil NotifyToJson:TActionConversationRefresh desc:@"onRefreshConversations"]);
 }
 
 // @implementation TIMMessageListenerImpl
 - (void)onNewMessage:(NSArray*) msgs {
-    [TIMJsonUtil MessageListToJson:TActionNewMessage timMessges:msgs];
+    SendToUnity([TIMJsonUtil MessageListToJson:TActionNewMessage timMessges:msgs]);
 }
 
 @end
 
-#if defined (__cplusplus)
-extern "C" {
-#endif
-    //声明
-    extern void SendToUnity(NSString* message) ;
-   
-#if defined (__cplusplus)
-}
-#endif
-    
-    
     
 #if defined (__cplusplus)
 extern "C" {
@@ -108,6 +73,8 @@ extern "C" {
         //缓存u3d信息
         U3dGameObject = _u3dGameObject;
         U3dCallback = _u3dCallback;
+        
+        NSLog(@"u3d object:%s",U3dGameObject);
     }
     
     void __Init(int appId){
@@ -116,22 +83,18 @@ extern "C" {
         sdkcfg.sdkAppId = SDKAPPID;
         sdkcfg.logLevel = TIM_LOG_NONE; //Log输出级别（debug级别会很多）
         //监听网络事件
-        sdkcfg.connListener = [IMSDK_Unity3DBridge shareInstance];
-        //日志事件
-        sdkcfg.logFunc = ^(TIMLogLevel lvl,NSString* content) {
-            NSLog(@"%@", content);
-        };
+        sdkcfg.connListener = [TIMSDK_Unity3DBridge shareInstance];
         //初始化TIM
         [[TIMManager sharedInstance] initSdk:sdkcfg];
         
         TIMUserConfig* usercfg=[[TIMUserConfig alloc] init];
         //用户在线状态变更
-        usercfg.userStatusListener = [IMSDK_Unity3DBridge shareInstance];
-        usercfg.groupEventListener = [IMSDK_Unity3DBridge shareInstance];
-        usercfg.refreshListener=[IMSDK_Unity3DBridge shareInstance];
+        usercfg.userStatusListener = [TIMSDK_Unity3DBridge shareInstance];
+        usercfg.groupEventListener = [TIMSDK_Unity3DBridge shareInstance];
+        usercfg.refreshListener=[TIMSDK_Unity3DBridge shareInstance];
         
         //监听新消息
-        [[TIMManager sharedInstance] addMessageListener:[IMSDK_Unity3DBridge shareInstance]];
+        [[TIMManager sharedInstance] addMessageListener:[TIMSDK_Unity3DBridge shareInstance]];
     }
     
     void __Login(void* _identifier)
@@ -204,14 +167,13 @@ extern "C" {
     	NSMutableArray * arr = [[NSMutableArray alloc] init];
 		[arr addObject:identifier];
 		[[TIMFriendshipManager sharedInstance] getUsersProfile:arr forceUpdate:forceUpdate succ:^(NSArray * arr) {
+            
+            NSLog(@"__GetUserProfile succ");
 		    for (TIMUserProfile * profile in arr) {
-		        NSLog(@"user=%@", profile);
-                NSDictionary *stuDict = [profile yy_modelToJSONObject];
-                NSLog(@"%@", [stuDict yy_modelToJSONString]);
-                [TIMJsonUtil ProfileToJson:TActionUserProfile profile:profile];
+                SendToUnity([TIMJsonUtil ProfileToJson:TActionUserProfile profile:profile]);
 		    }
 		}fail:^(int code, NSString * err) {
-		    NSLog(@"GetFriendsProfile fail: code=%d err=%@", code, err);
+		    NSLog(@"__GetUserProfile fail: code=%d err=%@", code, err);
             SendToUnity([TIMJsonUtil ErrorToJson:TActionUserProfile code:code desc:err]);
 		}];
     }
@@ -408,7 +370,7 @@ extern "C" {
     //TODO:发送给Unity
     void SendToUnity(NSString* message) {
         NSLog(@"SendToUnity: %@", message);
-    	UnitySendMessage(U3dGameObject, U3dCallback, [message UTF8String]);
+    	UnitySendMessage("UnityTimSDK", "_Callback", [message UTF8String]);
     }
     
 #if defined (__cplusplus)

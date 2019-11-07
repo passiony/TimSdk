@@ -18,7 +18,7 @@ public interface ITimImpl
     // 修改自己的信息()"AllowType_Type_Invalid";"AllowType_Type_AllowAny";"AllowType_Type_DenyAny";"AllowType_Type_NeedConfirm";
     void ModifySelfProfile(string nickname, int gender, int birthday, string signature, string allowType);
     // 获取用户资料
-    void GetUsersProfile(string identifier, bool forceUpdate);
+    void GetUserProfile(string identifier, bool forceUpdate);
 
 
 

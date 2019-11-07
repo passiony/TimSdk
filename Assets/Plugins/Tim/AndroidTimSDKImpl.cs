@@ -48,7 +48,7 @@ public class AndroidTimSDKImpl : ITimImpl
         imsdk.Call("ModifySelfProfile", nickname, gender, birthday, signature, allowType);
     }
 
-    public void GetUsersProfile(string identifier,bool forceUpdate)
+    public void GetUserProfile(string identifier,bool forceUpdate)
     {
         imsdk.Call("GetUsersProfile", identifier, forceUpdate);
     }
