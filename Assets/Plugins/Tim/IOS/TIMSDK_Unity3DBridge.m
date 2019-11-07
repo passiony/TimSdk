@@ -71,10 +71,10 @@ extern "C" {
         NSLog(@"TimSdk_Unity3DBridge ctor success");
         
         //缓存u3d信息
-        U3dGameObject = _u3dGameObject;
-        U3dCallback = _u3dCallback;
+        U3dGameObject = [NSString stringWithCString:_u3dGameObject encoding:NSUTF8StringEncoding];
+        U3dCallback = [NSString stringWithCString:_u3dCallback encoding:NSUTF8StringEncoding];
         
-        NSLog(@"u3d object:%s",U3dGameObject);
+        NSLog(@"u3d object:%@",U3dGameObject);
     }
     
     void __Init(int appId){
@@ -370,7 +370,7 @@ extern "C" {
     //TODO:发送给Unity
     void SendToUnity(NSString* message) {
         NSLog(@"SendToUnity: %@", message);
-    	UnitySendMessage("UnityTimSDK", "_Callback", [message UTF8String]);
+    	UnitySendMessage([U3dGameObject UTF8String], [U3dCallback UTF8String], [message UTF8String]);
     }
     
 #if defined (__cplusplus)

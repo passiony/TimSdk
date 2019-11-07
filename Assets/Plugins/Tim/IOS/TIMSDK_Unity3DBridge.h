@@ -7,8 +7,8 @@
 
 #import <ImSDK/ImSDK.h>
 
-static char * U3dGameObject =nil;
-static char * U3dCallback =nil;
+static NSString * U3dGameObject =@"";
+static NSString * U3dCallback =@"";
 
 #if defined (__cplusplus)
 extern "C" {
