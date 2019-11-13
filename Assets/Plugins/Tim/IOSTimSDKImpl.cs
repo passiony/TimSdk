@@ -26,7 +26,7 @@ public class IOSTimSDKImpl : ITimImpl
     [DllImport("__Internal")]
     private static extern void __AddFriend(string identifier, string addword, string remark);
     [DllImport("__Internal")]
-    private static extern void __DeleteFriend(string identifier);
+    private static extern void __DeleteFriend(string identifier, int delType);
     [DllImport("__Internal")]
     private static extern void __DoResponse(int type);
     [DllImport("__Internal")]
@@ -96,9 +96,9 @@ public class IOSTimSDKImpl : ITimImpl
         __AddFriend(identifier, addword, remark);
     }
 
-    public void DeleteFriend(string identifier)
+    public void DeleteFriend(string identifier, int delType)
     {
-        __DeleteFriend(identifier);
+        __DeleteFriend(identifier, delType);
     }
 
     public void GetFriendList()

@@ -208,7 +208,7 @@ extern "C" {
 		}];
     }
 
-    void __DeleteFriend(void* _identifier)
+    void __DeleteFriend(void* _identifier,int delType)
     {
     	NSString* identifier = [NSString stringWithCString:_identifier encoding:NSUTF8StringEncoding];
 
@@ -216,7 +216,7 @@ extern "C" {
 		[del_users addObject:identifier];
 		
 		// TIM_FRIEND_DEL_BOTH 指定删除双向好友
-		[[TIMFriendshipManager sharedInstance] deleteFriends:del_users delType:TIM_FRIEND_DEL_BOTH succ:^(NSArray<TIMFriendResult *> *results) {
+		[[TIMFriendshipManager sharedInstance] deleteFriends:del_users delType:delType succ:^(NSArray<TIMFriendResult *> *results) {
 		    for (TIMFriendResult * res in results) {
                 SendToUnity([TIMJsonUtil FriendResultToJson:TActionDeleteFriend timFriend:res]);
 		    }

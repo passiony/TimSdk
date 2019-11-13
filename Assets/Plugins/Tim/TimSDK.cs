@@ -134,11 +134,11 @@ public class TimSDK : MonoBehaviour
     /// 删除好友
     /// </summary>
     /// <param name="identifiers"></param>
-    public void DeleteFriends(string identifiers)
+    public void DeleteFriend(string identifier,int delType)
     {
         Debug.Log("TimSDK.DeleteFriend()");
 
-        TimSdkImpl.DeleteFriend(identifiers);
+        TimSdkImpl.DeleteFriend(identifier, delType);
     }
 
     /// <summary>

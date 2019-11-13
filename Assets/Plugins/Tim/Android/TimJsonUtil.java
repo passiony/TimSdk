@@ -190,7 +190,7 @@ public class TimJsonUtil {
         JSONObject map = new JSONObject();
 
         try {
-            map.put("state", 1);
+            map.put("state", TState.Success);
             map.put("action", TAction.PendencyList);
 
             JSONArray array = new JSONArray();

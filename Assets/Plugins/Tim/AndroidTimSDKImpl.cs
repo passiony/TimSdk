@@ -62,9 +62,9 @@ public class AndroidTimSDKImpl : ITimImpl
         imsdk.Call("AddFriend" , identifier, addword, remark);
     }
 
-    public void DeleteFriend(string identifier)
+    public void DeleteFriend(string identifier,int delType)
     {
-        imsdk.Call("DeleteFriend", identifier);
+        imsdk.Call("DeleteFriend", identifier, delType);
     }
 
     public void GetFriendList()

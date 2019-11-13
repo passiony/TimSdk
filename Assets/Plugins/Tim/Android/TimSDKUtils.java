@@ -30,9 +30,7 @@ import com.tencent.imsdk.TIMUserProfile;
 import com.tencent.imsdk.TIMUserStatusListener;
 import com.tencent.imsdk.TIMValueCallBack;
 import com.tencent.imsdk.ext.group.TIMGroupBaseInfo;
-import com.tencent.imsdk.friendship.TIMDelFriendType;
 import com.tencent.imsdk.friendship.TIMFriend;
-import com.tencent.imsdk.friendship.TIMFriendPendencyItem;
 import com.tencent.imsdk.friendship.TIMFriendPendencyRequest;
 import com.tencent.imsdk.friendship.TIMFriendPendencyResponse;
 import com.tencent.imsdk.friendship.TIMFriendRequest;
@@ -335,7 +333,7 @@ public class TimSDKUtils implements Handler.Callback {
     public void AddFriend(String identifier, String addword, String remark) {
         TIMFriendRequest timFriendRequest = new TIMFriendRequest(identifier);
         timFriendRequest.setAddWording(addword);
-        timFriendRequest.setAddSource("AddSrource_Type_Android");
+        timFriendRequest.setAddSource("android");
         timFriendRequest.setRemark(remark);
 
         TIMFriendshipManager.getInstance().addFriend(timFriendRequest, new TIMValueCallBack<TIMFriendResult>() {
@@ -354,11 +352,11 @@ public class TimSDKUtils implements Handler.Callback {
     }
 
     //TODO:删除好友
-    public void DeleteFriend(String identifier) {
+    public void DeleteFriend(String identifier, int delType) {
         List<String> identifiers = new ArrayList<>();
         identifiers.add(identifier);
 
-        TIMFriendshipManager.getInstance().deleteFriends(identifiers, TIMDelFriendType.TIM_FRIEND_DEL_SINGLE, new TIMValueCallBack<List<TIMFriendResult>>() {
+        TIMFriendshipManager.getInstance().deleteFriends(identifiers, delType, new TIMValueCallBack<List<TIMFriendResult>>() {
             @Override
             public void onError(int code, String desc) {
                 Log.e(TAG, "deleteFriends err code = " + code + ", desc = " + desc);

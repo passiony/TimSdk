@@ -27,7 +27,7 @@ public interface ITimImpl
     // 添加好友
     void AddFriend(string identifier , string addword,string remark);
     //删除好友
-    void DeleteFriend(string identifier);
+    void DeleteFriend(string identifier,int delType);
     // 处理好友请求(同意/同意并添加/拒绝)
     void DoResponse(int type);
     // 获取未决列表()
